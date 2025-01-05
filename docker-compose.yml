@@ -1,0 +1,57 @@
+services:
+  php:
+    build:
+      context: ./docker/php
+    container_name: php_7_container
+    volumes:
+      - ./project/:/var/www
+      - ./logs/php:/var/log/php
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: ./docker/nginx
+    container_name: nginx_7_container
+    ports:
+      - "8000:80"
+    volumes:
+      - ./project:/var/www
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_5.7_container
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - "./mysql/:/var/lib/mysql"
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_7
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
