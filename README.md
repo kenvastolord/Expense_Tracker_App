@@ -35,7 +35,7 @@ This project is a Dockerized **PHP 7** environment with **NGINX**, **MySQL**, an
 ---
 
 ## Project Structure
-- `src/`: PHP source code.
+- `public/`: PHP source code.
 - `docker/nginx/`: nginx configuration files.
 - `docker/php/`: PHP Dockerfile and settings.
 - `docker/mysql/`: MySQL configuration files.
